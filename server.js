@@ -4,7 +4,7 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 app.use(cors());
-const data = require("./data/weather.json");
+const data = require("./weather.json");
 
 app.get("/", (_, response) => response.json("Root route."));
 
@@ -12,12 +12,15 @@ app.get("/", (_, response) => response.json("Root route."));
 // localhost:8080/weather?lat=48.8588897&lon=2.3200410217200766&searchQuery=Paris
 
 app.get("/weather", (request, response) => {
-  const lat = request.query.lat;
-  const lon = request.query.lon;
-  const searchQuery = request.query.searchQuery;
+  // const lat = request.query.lat;
+  // const lon = request.query.lon;
+  const searchQuery = request.query.searchQuery.toLowerCase();
 
   const filteredCity = data.find((city) => {
-    return city.city_name === searchQuery;
+    return (
+      city.city_name.toLowerCase() === searchQuery
+      //&& city.lat === lat && city.lon === lon
+    );
   });
 
   const wrangledData = filteredCity.data.map((day) => {
